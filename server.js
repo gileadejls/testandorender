@@ -1,6 +1,14 @@
+require('dotenv').config()
+
 const express = require('express')
 const path = require('path')
 const app = express()
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING).then(()=>{
+    console.log("Conectado ao bando de dados MONGODB")
+    app.emit('ready')
+})
 
 
 app.set('views', path.resolve(__dirname, 'src', 'views'))
@@ -21,6 +29,9 @@ app.get('/login', (req, res)=>{
     res.render('login')
 })
 
-app.listen(3000, ()=>{
-    console.log('Servidor rodando')
+//INICIANDO SERVIDOR
+app.on('ready', ()=>{
+    app.listen(3000, ()=>{
+        console.log('Servidor rodando')
+    })
 })
